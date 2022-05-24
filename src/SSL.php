@@ -3,7 +3,7 @@
 namespace Lit\DevOps;
 
 use Lit\DevOps\mapper\SSLExpireMapper;
-use Lit\DevOps\source\SSlExpire;
+use Lit\DevOps\source\SslExpire;
 
 class SSL
 {
@@ -15,7 +15,7 @@ class SSL
      * @author litong
      */
     public static function checkExpire($domains) {
-        return (new SSlExpire())->check($domains);
+        return (new SslExpire())->check($domains);
     }
 
 

@@ -7,7 +7,7 @@ use Lit\DevOps\constant\ExceptionMsg;
 use Lit\DevOps\mapper\SSLExpireMapper;
 use Lit\Utils\LiString;
 
-class SSlExpire
+class SslExpire
 {
     public function __construct() {
         if (!extension_loaded("curl")) {
@@ -29,7 +29,7 @@ class SSlExpire
         $domains = array_unique($domains);
         $checkExpire = [];
         foreach ($domains as $domain) {
-            $checkExpire[] = $this->getSSLInfo($domain);
+            $checkExpire[] = $this->getSslInfo($domain);
         }
         return $checkExpire;
     }
@@ -42,7 +42,7 @@ class SSlExpire
      * @return SSLExpireMapper
      * @author litong
      */
-    protected function getSSLInfo($domain) {
+    protected function getSslInfo($domain) {
         $tmpFile = tmpfile();
         $ch = curl_init($domain);
         curl_setopt_array($ch, [
@@ -60,7 +60,7 @@ class SSlExpire
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         fseek($tmpFile, 0);
-        $read = fread($tmpFile, 1024);
+        $read = fread($tmpFile, 10240);
         fclose($tmpFile);
         if ($sslVerify === 0 && $httpCode > 0) {
             $sem = $this->explainTime($read);

@@ -1,31 +1,38 @@
 <?php
 
-use Lit\DevOps\mapper\MySQLBackupMapper;
+use Lit\DevOps\mapper\MongoDbBackupMapper;
+use Lit\DevOps\mapper\MySqlBackupMapper;
 
 include(__DIR__ . "/vendor/autoload.php");
 
-//MySQL备份
-$backupMapper = new MySQLBackupMapper();
-$backupMapper->host = "127.0.0.1";
-$backupMapper->port = "23306";
-$backupMapper->username = "root";
-$backupMapper->password = "123456";
-$backupMapper->charset = "utf8mb4";
-$backupMapper->database = "ibeautys";
+//MongoDB备份
+//$databaseConf[] = new MongoDbBackupMapper([]);
+//\Lit\DevOps\MongoDB::backup($databaseConf, "/tmp/mongo");
 
-$conf[] = $backupMapper;
-\Lit\DevOps\MySQL::backup($conf, "/tmp");
+//MySQL备份
+$conf = [
+    "host" => "192.168.1.25", "port" => "3306", "username" => "root", "password" => "CA8Bq@OX5ARPifFv",
+    "charset" => "utf8mb4", "database" => "copywriting", "mysqldump" => "/usr/bin/mysqldump"
+];
+$databaseConf[] = new MySqlBackupMapper($conf);
+$conf = array_merge($conf, ["database" => "libraries", "tables" => ["xs_book", "xs_book_class", "xs_keywords", "xs_tag_group"]]);
+$databaseConf[] = new MySqlBackupMapper($conf);
+
+$backupResult = \Lit\DevOps\MySQL::backup($databaseConf, "/tmp/mysql");
+foreach ($backupResult as $conf) {
+    var_dump($conf->run_success . " " . $conf->backup_file);
+}
 
 
 //SSL 证书有效监控
-//$domains = ["https://baidu.com", "http://sina.com.cn"];
-//
-//$data = \Lit\DevOps\SSL::checkExpire($domains);
-//foreach ($data as $expireMapper) {
-//    if ($expireMapper->success) {
-//        var_dump($expireMapper->domain . " 证书还有 " . $expireMapper->spare_day . " 天 " . ($expireMapper->spare_day <= 30 ? "快过期!" : "正常"));
-//    } else {
-//        var_dump($expireMapper->domain . " 证书验证失败!");
-//    }
-//}
+$domains = ["https://baidu.com", "http://sina.com.cn"];
+
+$data = \Lit\DevOps\SSL::checkExpire($domains);
+foreach ($data as $expireMapper) {
+    if ($expireMapper->success) {
+        var_dump($expireMapper->domain . " 证书还有 " . $expireMapper->spare_day . " 天 " . ($expireMapper->spare_day <= 30 ? "快过期!" : "正常"));
+    } else {
+        var_dump($expireMapper->domain . " 证书验证失败!");
+    }
+}
 
