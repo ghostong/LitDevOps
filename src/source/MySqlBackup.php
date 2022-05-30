@@ -15,6 +15,17 @@ class MySqlBackup
      * @throws \Exception
      */
     public function __construct($databaseConf, $backupDir) {
+
+        //判断目录是否存在
+        if (!is_dir($backupDir)) {
+            throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::DIR_NOT_EXISTS) . " " . $backupDir, ExceptionMsg::DIR_NOT_EXISTS);
+        }
+
+        //验证目录可写
+        if (!is_writable($backupDir)) {
+            throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::DIR_NOT_WRITEABLE) . " " . $backupDir, ExceptionMsg::DIR_NOT_WRITEABLE);
+        }
+
         //依赖exec
         if (!function_exists("exec")) {
             throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::FUNCTION_EXEC_NOT_EXISTS), ExceptionMsg::FUNCTION_EXEC_NOT_EXISTS);
@@ -28,11 +39,6 @@ class MySqlBackup
             if (!Utils::commandExists($command)) {
                 throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::COMMAND_MYSQLDUMP_NOT_EXISTS), ExceptionMsg::COMMAND_MYSQLDUMP_NOT_EXISTS);
             }
-        }
-
-        //验证目录可写
-        if (!is_writable($backupDir)) {
-            throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::DIR_NOT_WRITEABLE) . " " . $backupDir, ExceptionMsg::DIR_NOT_WRITEABLE);
         }
     }
 
@@ -63,7 +69,6 @@ class MySqlBackup
      */
     protected function backupDatabase($conf, $backupDir, $backupVersion) {
         $conf = $this->getBackupDir($conf, $backupDir, $backupVersion);
-        //      mysqldump         charset          host user pass db table > path
         $command = "%s  --default-character-set=%s -h%s -u%s -p%s %s  %s   > %s";
         $command = sprintf($command,
             $conf->mysqldump, $conf->charset, $conf->host, $conf->username, $conf->password,

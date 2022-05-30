@@ -16,6 +16,17 @@ class MongoDbBackup
      * @throws \Exception
      */
     public function __construct($databaseConf, $backupDir) {
+
+        //判断目录是否存在
+        if (!is_dir($backupDir)) {
+            throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::DIR_NOT_EXISTS) . " " . $backupDir, ExceptionMsg::DIR_NOT_EXISTS);
+        }
+
+        //验证目录可写
+        if (!is_writable($backupDir)) {
+            throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::DIR_NOT_WRITEABLE) . " " . $backupDir, ExceptionMsg::DIR_NOT_WRITEABLE);
+        }
+
         //依赖exec
         if (!function_exists("exec")) {
             throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::FUNCTION_EXEC_NOT_EXISTS), ExceptionMsg::FUNCTION_EXEC_NOT_EXISTS);
@@ -29,11 +40,6 @@ class MongoDbBackup
             if (!Utils::commandExists($command)) {
                 throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::COMMAND_MONGODUMP_NOT_EXISTS), ExceptionMsg::COMMAND_MONGODUMP_NOT_EXISTS);
             }
-        }
-
-        //验证目录可写
-        if (!is_writable($backupDir)) {
-            throw new \Exception(ExceptionMsg::getComment(ExceptionMsg::DIR_NOT_WRITEABLE) . " " . $backupDir, ExceptionMsg::DIR_NOT_WRITEABLE);
         }
     }
 
@@ -64,17 +70,14 @@ class MongoDbBackup
      */
     protected function backupDatabase($conf, $backupDir, $backupVersion) {
         $conf = $this->getBackupDir($conf, $backupDir, $backupVersion);
-        //      mongodump         charset          host user pass db table > path
-        $command = "%s  --default-character-set=%s -h%s -u%s -p%s %s  %s   > %s";
+        $command = "%s --host=%s --port=%s --username=%s --password=%s --db=%s --authenticationDatabase=%s --out=%s";
         $command = sprintf($command,
-            $conf->mysqldump, $conf->charset, $conf->host, $conf->username, $conf->password,
-            $conf->database, empty($conf->tables) ? "" : implode(" ", $conf->tables),
-            $conf->backup_file
+            $conf->mongodump, $conf->host, $conf->port, $conf->username, $conf->password,
+            $conf->database, $conf->auth_database, $conf->backup_dir
         );
         exec($command, $execRes, $resultCode);
         $conf->run_success = ($resultCode == 0);
         $conf->run_command = $command;
-
         return $conf;
     }
 
@@ -87,9 +90,9 @@ class MongoDbBackup
      * @author litong
      */
     protected function getBackupDir($conf, $backupDir, $backupVersion) {
-        $conf->backup_file = $backupDir . DIRECTORY_SEPARATOR . $backupVersion . DIRECTORY_SEPARATOR .
-            $conf->host . "_" . $conf->port . "_" . $conf->database . ".sql";
-        !is_dir(dirname($conf->backup_file)) && mkdir(dirname($conf->backup_file), 0777, true);
+        $conf->backup_dir = $backupDir . DIRECTORY_SEPARATOR . $backupVersion . DIRECTORY_SEPARATOR .
+            $conf->host . "_" . $conf->port . "_" . $conf->database;
+        !is_dir(dirname($conf->backup_dir)) && mkdir($conf->backup_dir, 0777, true);
         return $conf;
     }
 }

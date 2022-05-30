@@ -11,6 +11,7 @@ use Lit\Utils\LiConst;
  * @value("COMMAND_MYSQLDUMP_NOT_EXISTS","mysqldump 命令不存在")
  * @value("COMMAND_MONGODUMP_NOT_EXISTS","mongodump 命令不存在")
  * @value("DIR_NOT_WRITEABLE","目录不可写")
+ * @value("DIR_NOT_EXISTS","目录不存在")
  */
 class ExceptionMsg extends LiConst
 {
@@ -19,5 +20,6 @@ class ExceptionMsg extends LiConst
     const COMMAND_MYSQLDUMP_NOT_EXISTS = 1003;
     const COMMAND_MONGODUMP_NOT_EXISTS = 1004;
     const DIR_NOT_WRITEABLE = 1005;
+    const DIR_NOT_EXISTS = 1006;
 
 }

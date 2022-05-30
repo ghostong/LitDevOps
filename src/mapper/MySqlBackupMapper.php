@@ -24,7 +24,7 @@ class MySqlBackupMapper extends LiMapper
     //mysql主机名称
     protected $host = "";
     //mysql端口
-    protected $port = "";
+    protected $port = "3306";
     //mysql用户名
     protected $username = "";
     //mysql密码
@@ -38,7 +38,7 @@ class MySqlBackupMapper extends LiMapper
     //mysqldump 路径
     protected $mysqldump = "";
 
-    //备份目录
+    //备份文件
     protected $backup_file = "";
     //是否执行成功
     protected $run_success = false;
