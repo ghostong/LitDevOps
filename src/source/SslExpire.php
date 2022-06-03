@@ -60,7 +60,10 @@ class SslExpire
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         fseek($tmpFile, 0);
-        $read = fread($tmpFile, 10240);
+        $read = "";
+        while (!feof($tmpFile)) {
+            $read .= fread($tmpFile, 10240);
+        }
         fclose($tmpFile);
         if ($sslVerify === 0 && $httpCode > 0) {
             $sem = $this->explainTime($read);
