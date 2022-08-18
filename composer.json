@@ -16,7 +16,7 @@
   "require": {
     "php": ">=5.6.0",
     "ext-curl": "*",
-    "lit/utils": "v0.2.26"
+    "lit/utils": ">=v0.2.26"
   },
   "minimum-stability": "dev",
   "autoload": {
