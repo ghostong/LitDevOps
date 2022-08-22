@@ -4,6 +4,11 @@ namespace Lit\DevOps\mapper;
 
 use Lit\Utils\LiMapper;
 
+/**
+ * @property $url
+ * @property $http_code
+ * @property $success
+ */
 class URLStatusMapper extends LiMapper
 {
     //url

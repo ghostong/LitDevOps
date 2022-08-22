@@ -1,10 +1,7 @@
 <?php
 
-use app\base\service\DingService;
 use Lit\DevOps\mapper\MongoDbBackupMapper;
 use Lit\DevOps\mapper\MySqlBackupMapper;
-use Lit\RedisExt\MessageStore\Mapper\MessageGroupMapper;
-use Lit\RedisExt\MessageStore\Mapper\SenderDingMarkdownMapper;
 
 include(__DIR__ . "/vendor/autoload.php");
 
@@ -35,7 +32,7 @@ foreach ($backupResult as $conf) {
 
 
 //SSL 证书有效监控
-$domains = ["https://baidu.com", "http://sina.com.cn"];
+$domains = ["https://baidu.com", "https://sina.com.cn"];
 
 $data = \Lit\DevOps\SSL::checkExpire($domains);
 foreach ($data as $expireMapper) {
@@ -47,16 +44,18 @@ foreach ($data as $expireMapper) {
 }
 
 //http 状态码检查
-$urls = ["https://www.baidu.com",
-        "https://cloud.tencent.com/developer/section/1339466",
-        "https://www.php.net/manual/zh/book.curl.php"];
+$urls = [
+    "https://www.baidu.com",
+    "https://cloud.tencent.com/developer/section/1339466",
+    "https://www.php.net/manual/zh/book.curl.php"
+];
 
 $data = \Lit\DevOps\URL::checkStatus($urls);
 foreach ($data as $urlMapper) {
-        if($urlMapper->success){
-            var_dump($urlMapper->url . " 状态码正常， 返回状态码是：" . $urlMapper->http_code);
-        } else {
-            var_dump($urlMapper->url . " 状态码异常， 返回状态码是: " . $urlMapper->http_code);
-        }
-        var_dump($urlMapper);
+    if ($urlMapper->success) {
+        var_dump($urlMapper->url . " 状态码正常， 返回状态码是：" . $urlMapper->http_code);
+    } else {
+        var_dump($urlMapper->url . " 状态码异常， 返回状态码是: " . $urlMapper->http_code);
+    }
+    var_dump($urlMapper);
 }
