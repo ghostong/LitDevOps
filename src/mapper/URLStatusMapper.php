@@ -20,4 +20,7 @@ class URLStatusMapper extends LiMapper
     //返回状态是否成功
     protected $success = false;
 
+    //Response body
+    protected $body = "";
+
 }
