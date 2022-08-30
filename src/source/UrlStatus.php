@@ -40,8 +40,10 @@ class UrlStatus
             CURLOPT_USERAGENT => 'Devops/monitor',
             CURLOPT_RETURNTRANSFER => true
         ]);
-        curl_exec($ch);
+        $responseData = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        $body = substr($responseData, $headerSize);
         curl_close($ch);
         if ($httpCode == 200) {
             $res = new URLStatusMapper();
@@ -50,7 +52,7 @@ class UrlStatus
             $res->success = true;
             return $res;
         } else {
-            return (new URLStatusMapper(["url" => $url, "http_code" => $httpCode]));
+            return (new URLStatusMapper(["url" => $url, "http_code" => $httpCode, "body" => $body]));
         }
     }
 }
