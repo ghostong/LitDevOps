@@ -8,6 +8,7 @@ use Lit\Utils\LiMapper;
  * @property $url
  * @property $http_code
  * @property $success
+ * @property $body
  */
 class URLStatusMapper extends LiMapper
 {
