@@ -16,8 +16,9 @@
   "require": {
     "php": ">=5.6.0",
     "ext-curl": "*",
-    "lit/utils": ">=v0.2.26",
-    "ext-pdo": "*"
+    "lit/utils": ">=v0.2.30",
+    "ext-pdo": "*",
+    "ext-json": "*"
   },
   "minimum-stability": "dev",
   "autoload": {
