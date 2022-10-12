@@ -17,7 +17,7 @@ class PHPSlowLog
                     $tmp = [];
                     file_put_contents($to, $output . "\n", FILE_APPEND);
                 } else {
-                    $tmp [] = $line;
+                    $tmp [count($tmp ?: []) + 1] = $line;
                 }
             };
         }
