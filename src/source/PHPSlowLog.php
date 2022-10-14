@@ -7,7 +7,7 @@ use Lit\Utils\LiFileListen;
 class PHPSlowLog
 {
     public function toJson($logConf) {
-        $fileList = $tmp = [];
+        $fileList = [];
         foreach ($logConf as $file => $to) {
             $fileList[$file] = function ($line) use ($file, $to, &$lines) {
                 $tmp = &$lines[$file];
@@ -17,7 +17,7 @@ class PHPSlowLog
                     $tmp = [];
                     file_put_contents($to, $output . "\n", FILE_APPEND);
                 } else {
-                    $tmp ["#" . sprintf("%05d", count($tmp))] = $line;
+                    $tmp ["#" . sprintf("%05d", count($tmp ?: []))] = $line;
                 }
             };
         }
