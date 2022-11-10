@@ -19,6 +19,7 @@ use Lit\Utils\LiMapper;
  * @property $server_id
  * @property $sql_text
  * @property $thread_id
+ * @property $occ_num 出现次数
  */
 class MySqlSlowLogResponseMapper extends LiMapper
 {
@@ -34,4 +35,5 @@ class MySqlSlowLogResponseMapper extends LiMapper
     protected $server_id = "";
     protected $sql_text = "";
     protected $thread_id = "";
+    protected $occ_num = 1;
 }

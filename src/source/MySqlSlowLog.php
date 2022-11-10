@@ -60,6 +60,7 @@ class MySqlSlowLog
                 foreach ($mappers as $mapper) {
                     similar_text($mapper->sql_text, $value["sql_text"], $percent);
                     if ($percent >= $maxPercent) {
+                        $mapper->occ_num++;
                         break;
                     }
                 }
