@@ -40,8 +40,18 @@ class UrlStatus
             CURLOPT_USERAGENT => 'Devops/monitor',
             CURLOPT_RETURNTRANSFER => true
         ]);
-        $responseData = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        // url请求重试，重试3次
+        $i = 0;
+        while ($i < 3){
+            $responseData = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if($httpCode != 0){
+                break;
+            }
+            $i++;
+            sleep(1);
+        }
+
         $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
         $body = substr($responseData, $headerSize);
         curl_close($ch);
