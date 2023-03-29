@@ -9,6 +9,7 @@ use Lit\Utils\LiMapper;
  * @property $http_code
  * @property $success
  * @property $body
+ * @property $message
  */
 class URLStatusMapper extends LiMapper
 {
@@ -23,5 +24,8 @@ class URLStatusMapper extends LiMapper
 
     //Response body
     protected $body = "";
+
+    //错误信息
+    protected $message = "";
 
 }

@@ -1,6 +1,21 @@
 <?php
 
+use Lit\DevOps\constant\HttpComparison;
+
 include(dirname(__DIR__) . "/vendor/autoload.php");
+
+//构建http检测
+
+//$data = \Lit\DevOps\URL::checkStatus($urls);
+
+$url = "https://novelwolfrest.novelfox.net/v1/popup.all?lang=en-US";
+$data = \Lit\DevOps\URL::checkJson($url, [
+    ["expire_time", "<",1],
+    ["pops.bookshelf.runtime", "=", false],
+    ["pops.bookshelf.actions.enter.id", HttpComparison::GT, 500]
+]);
+
+var_dump($data->getInsert());
 
 //http 状态码检查
 
