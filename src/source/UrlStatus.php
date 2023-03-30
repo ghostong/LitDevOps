@@ -29,6 +29,23 @@ class UrlStatus
         return $urlStatus;
     }
 
+    public function checkString($url,$responseKeys){
+        $urlStatusMapper = $this->getUrlInfo($url);
+        if(!$urlStatusMapper->success){
+            return $urlStatusMapper;
+        }
+        $responseData = $urlStatusMapper->body;
+        if($responseKeys != ''){
+            if(strpos($responseData, $responseKeys) !== false){
+                $urlStatusMapper->success = true;
+            }else {
+                $urlStatusMapper->success = false;
+                $urlStatusMapper->message = "返回Body验证失败";
+            }
+        }
+        return $urlStatusMapper;
+    }
+
     public function checkJson($url, $conditions) {
         $urlStatusMapper = $this->getUrlInfo($url);
         if (!$urlStatusMapper->success) {
@@ -55,6 +72,7 @@ class UrlStatus
         }
         return $urlStatusMapper;
     }
+
 
     protected function getObjectProperties($object, $fields) {
         $tmpObj = $object;

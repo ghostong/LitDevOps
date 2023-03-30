@@ -22,4 +22,12 @@ class URL
         return (new UrlStatus())->checkJson($url, $conditions);
     }
 
+    /**
+     * @param $url
+     * @param $responseKeys
+     */
+    public static function checkString($url,$responseKeys) {
+        return (new UrlStatus())->checkString($url, $responseKeys);
+    }
+
 }

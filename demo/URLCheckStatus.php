@@ -9,7 +9,7 @@ include(dirname(__DIR__) . "/vendor/autoload.php");
 
 //$data = \Lit\DevOps\URL::checkStatus($urls);
 
-$url = "https://novelwolfrest.novelfox.net/v1/popup.all?lang=en-US";
+$url = "https://www.baidu.com";
 $data = \Lit\DevOps\URL::checkJson($url, [
     ["expire_time", "<",1],
     ["pops.bookshelf.runtime", "=", false],
@@ -35,8 +35,8 @@ foreach ($data as $urlMapper) {
 }
 
 //http返回Body 关键字检查
-$url = "https://m.neo-story.com/web2app/s_book_previous_gray/e00a16004dac095ce26542b2adb4c618?ishm=true&pid=facebook&ndl_pid=facebook&ndl_campaign_id=test11&ndl_ad_id=test222&ndl_adset_id=test333&ndl_act_id=1576838949452043&ndl_book_id=130862&cpp=ios&lang=zh-cn";
-$strKeys = "TimeStamp=1680085914041";
+$url = "https://www.baidu.com";
+$strKeys = "baidu";
 
 $data = \Lit\DevOps\URL::checkString($url, $strKeys);
 
