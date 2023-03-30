@@ -5,21 +5,7 @@ use Lit\DevOps\constant\HttpComparison;
 include(dirname(__DIR__) . "/vendor/autoload.php");
 
 
-//构建http检测
-
-//$data = \Lit\DevOps\URL::checkStatus($urls);
-
-$url = "https://www.baidu.com";
-$data = \Lit\DevOps\URL::checkJson($url, [
-    ["expire_time", "<",1],
-    ["pops.bookshelf.runtime", "=", false],
-    ["pops.bookshelf.actions.enter.id", HttpComparison::GT, 500]
-]);
-
-var_dump($data->getInsert());
-
 //http 状态码检查
-
 $urls = [
     "https://www.baidu.com",
     "https://www.php.net/manual/zh/book.curl.php"
@@ -34,10 +20,19 @@ foreach ($data as $urlMapper) {
     }
 }
 
+//接口 json返回 检测
+$url = "https://www.baidu.com";
+$urlMapper = \Lit\DevOps\URL::checkJson($url, [
+    ["expire_time", "<", 1],
+    ["pops.bookshelf.runtime", "=", false],
+    ["pops.bookshelf.actions.enter.id", HttpComparison::GT, 500]
+]);
+
+var_dump($urlMapper->getInsert());
+
 //http返回Body 关键字检查
 $url = "https://www.baidu.com";
 $strKeys = "baidu";
 
-$data = \Lit\DevOps\URL::checkString($url, $strKeys);
-
-var_dump($data->getInsert());
+$urlMapper = \Lit\DevOps\URL::checkString($url, $strKeys);
+var_dump($urlMapper->getInsert());

@@ -29,6 +29,14 @@ class UrlStatus
         return $urlStatus;
     }
 
+    /**
+     * 检测 http 字符串 返回
+     * @date 2023/3/30
+     * @param $url
+     * @param $responseKeys
+     * @return URLStatusMapper
+     * @author litong
+     */
     public function checkString($url,$responseKeys){
         $urlStatusMapper = $this->getUrlInfo($url);
         if(!$urlStatusMapper->success){
@@ -46,6 +54,14 @@ class UrlStatus
         return $urlStatusMapper;
     }
 
+    /**
+     * 检测 http json 返回
+     * @date 2023/3/30
+     * @param $url
+     * @param $conditions
+     * @return URLStatusMapper
+     * @author litong
+     */
     public function checkJson($url, $conditions) {
         $urlStatusMapper = $this->getUrlInfo($url);
         if (!$urlStatusMapper->success) {
