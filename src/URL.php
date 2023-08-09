@@ -19,7 +19,7 @@ class URL
     /**
      * 检查URL返回的json结构
      * @param string $url 链接地址
-     * @param string $conditions json验证条件
+     * @param array $conditions json验证条件
      * @return URLStatusMapper
      */
     public static function checkJson($url, $conditions) {

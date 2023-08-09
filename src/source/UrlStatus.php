@@ -5,6 +5,7 @@ namespace Lit\DevOps\source;
 use Lit\DevOps\constant\ExceptionMsg;
 use Lit\DevOps\constant\HttpComparison;
 use Lit\DevOps\mapper\URLStatusMapper;
+use Lit\Utils\LiHttp;
 
 class UrlStatus
 {
@@ -37,16 +38,16 @@ class UrlStatus
      * @return URLStatusMapper
      * @author litong
      */
-    public function checkString($url,$responseKeys){
+    public function checkString($url, $responseKeys) {
         $urlStatusMapper = $this->getUrlInfo($url);
-        if(!$urlStatusMapper->success){
+        if (!$urlStatusMapper->success) {
             return $urlStatusMapper;
         }
         $responseData = $urlStatusMapper->body;
-        if($responseKeys != ''){
-            if(strpos($responseData, $responseKeys) !== false){
+        if ($responseKeys != '') {
+            if (strpos($responseData, $responseKeys) !== false) {
                 $urlStatusMapper->success = true;
-            }else {
+            } else {
                 $urlStatusMapper->success = false;
                 $urlStatusMapper->message = "返回Body验证失败";
             }
@@ -57,8 +58,8 @@ class UrlStatus
     /**
      * 检测 http json 返回
      * @date 2023/3/30
-     * @param $url
-     * @param $conditions
+     * @param string $url
+     * @param array $conditions
      * @return URLStatusMapper
      * @author litong
      */
@@ -136,28 +137,16 @@ class UrlStatus
      * http状态码是否200
      */
     protected function getUrlInfo($url) {
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_HEADER => true,
-            CURLOPT_USERAGENT => 'Devops/monitor',
-            CURLOPT_RETURNTRANSFER => true
-        ]);
-        // url请求重试，重试3次
-        $i = $httpCode = 0;
-        $responseData = "";
-        while ($i < 3) {
-            $responseData = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        for ($i = 0; $i < 3; $i++) {
+            $liHttp = new LiHttp();
+            $liHttp->setUserAgent("DevOps/Monitor")->get($url)->send();
+            $httpCode = $liHttp->getHttpCode();
+            $body = $liHttp->getHttpResult();
             if ($httpCode != 0) {
                 break;
             }
-            $i++;
             sleep(1);
         }
-        $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-        $body = substr($responseData, $headerSize);
-        curl_close($ch);
         if ($httpCode == 200) {
             $success = true;
         } else {
