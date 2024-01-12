@@ -12,7 +12,7 @@ class FilesClean
      * @date 2024/1/12
      * @param $dirs
      * @param $expireDay
-     * @return \Generator
+     * @return bool
      * @author litong
      */
     public function byDays($dirs, $expireDay) {
@@ -24,7 +24,7 @@ class FilesClean
      * @date 2024/1/12
      * @param $dirs
      * @param $expireHour
-     * @return \Generator
+     * @return bool
      * @author litong
      */
     public function byHours($dirs, $expireHour) {
@@ -36,7 +36,7 @@ class FilesClean
      * @date 2024/1/12
      * @param $dirs
      * @param $expireMinute
-     * @return \Generator
+     * @return bool
      * @author litong
      */
     public function byMinutes($dirs, $expireMinute) {
@@ -45,10 +45,9 @@ class FilesClean
             LiFileOperator::listFilesByTime($dir, LiFileOperator::CTIME, function ($fileTime, $realpath) use ($cleanTime) {
                 if ($fileTime < $cleanTime) {
                     unlink($realpath);
-                    yield $realpath;
                 }
             });
         }
-        yield;
+        return true;
     }
 }

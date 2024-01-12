@@ -10,7 +10,7 @@ class Files
      * 以日期为单位清理文件
      * @param array $dirs
      * @param int $expireDay
-     * @return \Generator
+     * @return bool
      */
     public static function cleanFileByDays($dirs, $expireDay = 1) {
         return (new FilesClean())->byDays($dirs, $expireDay);
@@ -20,7 +20,7 @@ class Files
      * 以日期为单位清理文件
      * @param array $dirs
      * @param int $expireHour
-     * @return \Generator
+     * @return bool
      */
     public static function cleanFileByHours($dirs, $expireHour = 24) {
         return (new FilesClean())->byHours($dirs, $expireHour);
@@ -30,7 +30,7 @@ class Files
      * 以日期为单位清理文件
      * @param array $dirs
      * @param int $expireMinute
-     * @return \Generator
+     * @return bool
      */
     public static function cleanFileByMinutes($dirs, $expireMinute = 1440) {
         return (new FilesClean())->byMinutes($dirs, $expireMinute);
