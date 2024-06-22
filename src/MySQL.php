@@ -41,11 +41,10 @@ class MySQL
      * 数据库表同步工具
      * @date 2024/6/20
      * @param $sysConfigs
-     * @return
      * @author litong
      */
     public static function dataSync($sysConfigs) {
-        return (new MySqlDataSync())->run($sysConfigs);
+        (new MySqlDataSync())->run($sysConfigs);
     }
 
 }

@@ -20,22 +20,20 @@ class MySqlDataSync
         $config->toPdoConn->beginTransaction();
         try {
             $config->toPdoConn->query("delete from `$config->toDatabase`.`$config->tableName`");
-            $sql = [];
             while ($row = $query->fetch(\PDO::FETCH_ASSOC)) {
-                $sql[] = LiString::array2sql($row, $config->tableName, $config->toDatabase);
-                if (count($sql) > 50) {
-                    $config->toPdoConn->query(implode(";", $sql));
-                    $sql = [];
-                }
-            }
-            if (!empty($sql)) {
-                $config->toPdoConn->query(implode(";", $sql));
+                $columns = implode(", ", array_keys($row));
+                $values = implode(", ", array_map(function ($value) use ($config) {
+                    return is_null($value) ? "NULL" : $config->toPdoConn->quote($value);
+                }, array_values($row)));
+                $sql = "INSERT INTO `{$config->toDatabase}`.`{$config->tableName}` ($columns) VALUES ($values)";
+                $config->toPdoConn->exec($sql);
             }
             if ($config->toPdoConn->inTransaction()) {
                 $config->toPdoConn->commit();
             }
         } catch (\Exception $exception) {
             $config->toPdoConn->rollBack();
+            throw $exception;
         }
 
     }
