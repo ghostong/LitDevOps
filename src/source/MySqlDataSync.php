@@ -42,9 +42,9 @@ class MySqlDataSync
     protected function makeSql($row, $config) {
         $columns = implode(", ", array_keys($row));
         $values = implode(", ", array_map(function ($value) use ($config) {
-            return is_null($value) ? "NULL" : $config->fromPdoConn->quote($value);
+            return is_null($value) ? "NULL" : $config->toPdoConn->quote($value);
         }, array_values($row)));
-        return "insert into `{$config->toDatabase}`.`{$config->tableName}` ($columns) values ($values)";
+        return "INSERT INTO `{$config->toDatabase}`.`{$config->tableName}` ($columns) VALUES ($values)";
     }
 
 }
