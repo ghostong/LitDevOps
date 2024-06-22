@@ -13,7 +13,7 @@ class MySqlDataSync
             $this->copyData($config);
         }
     }
-    
+
     protected function copyData(MySqlDataSyncMapper $config) {
         $query = $config->fromPdoConn->query("select * from `{$config->toDatabase}`.`{$config->tableName}`");
         $config->toPdoConn->beginTransaction();
