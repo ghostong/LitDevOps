@@ -24,6 +24,7 @@ class MySqlDataSync
                 $sql[] = $this->makeSql($row, $config);
                 if (count($sql) >= 50) {
                     $config->toPdoConn->exec(implode(";", $sql));
+                    $sql = [];
                 }
             }
             if (count($sql) > 0) {
