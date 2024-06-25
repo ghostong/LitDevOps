@@ -16,3 +16,6 @@ phpComposer: 运维相关
 
 7. [PHP慢日志转JSON](./demo/PHPSlowLogToJson.php)
 
+8. [数据库同步数据](./demo/MySQLDataSync.php)
+
+9. [拉取域名解析](./demo/DNSList.php)
