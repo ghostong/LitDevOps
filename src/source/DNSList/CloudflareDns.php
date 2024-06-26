@@ -15,27 +15,16 @@ class CloudflareDns
      * @return DnsZoneMapper[]
      */
     public static function getList($email, $bearerAuth, $authKey) {
-        $dnsZoneMappers = [];
-        $zoneList = self::zoneList($bearerAuth);
-        foreach ($zoneList as $zone) {
-            $dnsRecordsMappers = [];
-            $records = self::getDnsRecords($zone['id'], $email, $authKey);
-            foreach ($records as $record) {
-                $dnsRecordsMapper = new DnsRecordsMapper();
-                $dnsRecordsMapper->zone_name = $record['zone_name'];
-                $dnsRecordsMapper->name = $record['name'];
-                $dnsRecordsMapper->type = $record['type'];
-                $dnsRecordsMapper->content = $record['content'];
-                $dnsRecordsMappers[] = $dnsRecordsMapper;
-            }
-            $dnsZoneMapper = new DnsZoneMapper();
-            $dnsZoneMapper->zone_name = $zone['name'];
-            $dnsZoneMapper->records = $dnsRecordsMappers;
-            $dnsZoneMappers[] = $dnsZoneMapper;
+        $dnsZoneMappers = self::zoneList($bearerAuth);
+        foreach ($dnsZoneMappers as $zoneMapper) {
+            $zoneMapper->records = self::getDnsRecords($zoneMapper->zone_id, $email, $authKey);
         }
         return $dnsZoneMappers;
     }
 
+    /**
+     * @return DnsRecordsMapper[]
+     */
     public static function getDnsRecords($zoneId, $email, $authKey) {
         $http = new LiHttp();
         $http->get("https://api.cloudflare.com/client/v4/zones/{$zoneId}/dns_records")
@@ -47,12 +36,25 @@ class CloudflareDns
             if (empty($result) || $result['success'] != true) {
                 throw new \Exception(10001, "获取 cloudflare DNS列表 失败");
             }
-            return $result['result'];
         } else {
             throw new \Exception(10002, "获取 cloudflare DNS列表 网络错误");
         }
+
+        $dnsZones = [];
+        foreach ($result['result'] as $record) {
+            $dnsRecordsMapper = new DnsRecordsMapper();
+            $dnsRecordsMapper->zone_name = $record['zone_name'];
+            $dnsRecordsMapper->name = $record['name'];
+            $dnsRecordsMapper->type = $record['type'];
+            $dnsRecordsMapper->content = $record['content'];
+            $dnsZones[] = $dnsRecordsMapper;
+        }
+        return $dnsZones;
     }
 
+    /**
+     * @return DnsZoneMapper[]
+     */
     public static function zoneList($bearerAuth) {
         $allData = [];
         $page = 1;
@@ -74,7 +76,14 @@ class CloudflareDns
                 throw new \Exception(10002, "获取 cloudflare 域名列表 网络错误");
             }
         }
-        return $allData;
+        $dnsZones = [];
+        foreach ($allData as $zone) {
+            $dnsZoneMapper = new DnsZoneMapper();
+            $dnsZoneMapper->zone_id = $zone['id'];
+            $dnsZoneMapper->zone_name = rtrim($zone['name'], '.');
+            $dnsZones[] = $dnsZoneMapper;
+        }
+        return $dnsZones;
     }
 
 }

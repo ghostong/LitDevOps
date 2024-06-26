@@ -15,38 +15,45 @@ class DnsPod
 {
 
     public static function getList($secretId, $secretKey) {
-        $dnsZoneMappers = [];
-        $zoneList = self::getDomainList($secretId, $secretKey);
-        foreach ($zoneList as $zone) {
-            $dnsRecordsMappers = [];
-            $records = self::getDnsRecords($secretId, $secretKey, $zone['Name']);
-            foreach ($records as $record) {
-                $dnsRecordsMapper = new DnsRecordsMapper();
-                $dnsRecordsMapper->zone_name = $zone['Name'];
-                $dnsRecordsMapper->name = $record['Name'] . '.' . $zone['Name'];
-                $dnsRecordsMapper->type = $record['Type'];
-                $dnsRecordsMapper->content = $record['Value'];
-                $dnsRecordsMappers[] = $dnsRecordsMapper;
-            }
-
-            $dnsZoneMapper = new DnsZoneMapper();
-            $dnsZoneMapper->zone_name = $zone['Name'];
-            $dnsZoneMapper->records = $dnsRecordsMappers;
-            $dnsZoneMappers[] = $dnsZoneMapper;
+        $dnsZoneMappers = self::getDomainList($secretId, $secretKey);
+        foreach ($dnsZoneMappers as $zoneMapper) {
+            $zoneMapper->records = self::getDnsRecords($secretId, $secretKey, $zoneMapper->zone_name);
         }
         return $dnsZoneMappers;
     }
 
+    /**
+     * @return DnsRecordsMapper[]
+     */
     public static function getDnsRecords($secretId, $secretKey, $domain) {
         $action = "DescribeRecordList";
         $result = self::query($secretId, $secretKey, $action, ['Domain' => $domain, 'Offset' => 0, 'Limit' => 3000]);
-        return $result['RecordList'];
+        $dnsZones = [];
+        foreach ($result['RecordList'] as $record) {
+            $dnsRecordsMapper = new DnsRecordsMapper();
+            $dnsRecordsMapper->zone_name = $domain;
+            $dnsRecordsMapper->name = $record['Name'] . '.' . $domain;
+            $dnsRecordsMapper->type = $record['Type'];
+            $dnsRecordsMapper->content = $record['Value'];
+            $dnsZones[] = $dnsRecordsMapper;
+        }
+        return $dnsZones;
     }
 
+    /**
+     * @return DnsZoneMapper[]
+     */
     public static function getDomainList($secretId, $secretKey) {
         $action = "DescribeDomainList";
         $result = self::query($secretId, $secretKey, $action, ['Offset' => 0, 'Limit' => 3000]);
-        return $result['DomainList'];
+        $dnsZones = [];
+        foreach ($result['DomainList'] as $zone) {
+            $dnsZoneMapper = new DnsZoneMapper();
+            $dnsZoneMapper->zone_id = $zone['DomainId'];
+            $dnsZoneMapper->zone_name = rtrim($zone['Name'], '.');
+            $dnsZones[] = $dnsZoneMapper;
+        }
+        return $dnsZones;
     }
 
     protected static function query($secretId, $secretKey, $action, $params) {

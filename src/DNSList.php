@@ -2,17 +2,32 @@
 
 namespace Lit\DevOps;
 
+use Lit\DevOps\source\DNSList\AwsRoute53;
 use Lit\DevOps\source\DNSList\CloudflareDns;
 use Lit\DevOps\source\DNSList\DnsPod;
 
 class DNSList
 {
     /**
-     * 获取必要参数:
+     * 获取必要参数: https://us-east-1.console.aws.amazon.com/iam/home
+     * 自定义权限
+     * {
+     *     "Version": "2012-10-17",
+     *     "Statement": [
+     *         {
+     *             "Effect": "Allow",
+     *             "Action": [
+     *                 "route53:ListHostedZones",
+     *                 "route53:ListResourceRecordSets"
+     *             ],
+     *             "Resource": "*"
+     *         }
+     *     ]
+     * }
      * @return mapper\DnsZoneMapper[]
      */
-    public static function awsRoute53() {
-
+    public static function awsRoute53($accessKeyId, $secretAccessKey, $region = 'us-east-1') {
+        return AwsRoute53::getList($accessKeyId, $secretAccessKey, $region);
     }
 
     /**
