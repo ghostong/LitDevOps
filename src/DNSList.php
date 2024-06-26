@@ -7,6 +7,10 @@ use Lit\DevOps\source\DNSList\DnsPod;
 
 class DNSList
 {
+    /**
+     * 获取必要参数:
+     * @return mapper\DnsZoneMapper[]
+     */
     public static function awsRoute53() {
 
     }
@@ -25,9 +29,14 @@ class DNSList
     public static function aliDns() {
     }
 
-    public static function dnsPod() {
-        return DnsPod::getList();
-
+    /**
+     * 获取必要参数: https://console.cloud.tencent.com/cam/capi
+     * @param $secretId
+     * @param $secretKey
+     * @return mapper\DnsZoneMapper[]
+     */
+    public static function dnsPod($secretId, $secretKey) {
+        return DnsPod::getList($secretId, $secretKey);
     }
 
 }

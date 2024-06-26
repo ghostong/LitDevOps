@@ -45,11 +45,11 @@ class CloudflareDns
         if ($http->getHttpCode() == 200) {
             $result = json_decode($http->getHttpResult(), true);
             if (empty($result) || $result['success'] != true) {
-                return [];
+                throw new \Exception(10001, "获取 cloudflare DNS列表 失败");
             }
             return $result['result'];
         } else {
-            return [];
+            throw new \Exception(10002, "获取 cloudflare DNS列表 网络错误");
         }
     }
 
@@ -64,14 +64,14 @@ class CloudflareDns
             if ($http->getHttpCode() == 200) {
                 $result = json_decode($http->getHttpResult(), true);
                 if (empty($result) || $result['success'] != true) {
-                    break;
+                    throw new \Exception(10001, "获取 cloudflare 域名列表 失败");
                 }
                 $allData = array_merge($allData, $result['result']);
                 if ($result['result_info']['total_pages'] == $page) {
                     break;
                 }
             } else {
-                break;
+                throw new \Exception(10002, "获取 cloudflare 域名列表 网络错误");
             }
         }
         return $allData;
