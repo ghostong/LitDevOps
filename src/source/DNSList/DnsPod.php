@@ -56,6 +56,9 @@ class DnsPod
         return $dnsZones;
     }
 
+    /**
+     * 尽可能不用SDK
+     */
     protected static function query($secretId, $secretKey, $action, $params) {
         $endpoint = "https://dnspod.tencentcloudapi.com";
         $payload = empty($params) ? '{}' : json_encode($params);
