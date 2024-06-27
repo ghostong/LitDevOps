@@ -18,8 +18,7 @@
     "ext-curl": "*",
     "ext-pdo": "*",
     "ext-json": "*",
-    "lit/utils": ">=v0.3.1",
-    "aws/aws-sdk-php": "^3.314"
+    "lit/utils": ">=v0.3.1"
   },
   "minimum-stability": "dev",
   "autoload": {

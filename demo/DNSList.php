@@ -6,6 +6,7 @@ include(dirname(__DIR__) . "/vendor/autoload.php");
 $data = [];
 
 ### AWS Route53
+## 注意 版本限制 需要手动在包中增加  composer.json 中增加 "aws/aws-sdk-php": "^3.314"
 //$accessKeyId = 'ueaoaeou';
 //$secretAccessKey = 'aoeuao';
 //$region = 'us-east-1';
