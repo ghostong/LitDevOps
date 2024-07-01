@@ -7,10 +7,6 @@ use Lit\DevOps\mapper\DnsRecordsMapper;
 use Lit\DevOps\mapper\DnsZoneMapper;
 use Lit\Utils\LiHttp;
 
-function sign($key, $msg) {
-    return hash_hmac("sha256", $msg, $key, true);
-}
-
 class DnsPod
 {
 
@@ -24,6 +20,7 @@ class DnsPod
 
     /**
      * @return DnsRecordsMapper[]
+     * @throws \Exception
      */
     public static function getDnsRecords($secretId, $secretKey, $domain) {
         $action = "DescribeRecordList";
@@ -42,6 +39,7 @@ class DnsPod
 
     /**
      * @return DnsZoneMapper[]
+     * @throws \Exception
      */
     public static function getDomainList($secretId, $secretKey) {
         $action = "DescribeDomainList";
@@ -73,10 +71,10 @@ class DnsPod
             if (!empty($result['Response'])) {
                 return $result['Response'];
             } else {
-                throw new \Exception(10001, "获取 DnsPod " . $action . " 失败");
+                throw new \Exception("获取 DnsPod " . $action . " 失败", 10001);
             }
         } else {
-            throw new \Exception(10002, "获取 DnsPod " . $action . " 网络错误");
+            throw new \Exception("获取 DnsPod " . $action . " 网络错误", 10002);
         }
     }
 
@@ -106,9 +104,9 @@ class DnsPod
         $stringToSign = "$algorithm\n$timestamp\n$credentialScope\n$hashedCanonicalRequest";
 
         // ************* 步骤 3：计算签名 *************
-        $secretDate = sign("TC3" . $secretKey, $date);
-        $secretService = sign($secretDate, $service);
-        $secretSigning = sign($secretService, "tc3_request");
+        $secretDate = self::signString("TC3" . $secretKey, $date);
+        $secretService = self::signString($secretDate, $service);
+        $secretSigning = self::signString($secretService, "tc3_request");
         $signature = hash_hmac("sha256", $stringToSign, $secretSigning);
 
         // ************* 步骤 4：拼接 Authorization *************
@@ -130,5 +128,9 @@ class DnsPod
             $headers["X-TC-Token"] = $token;
         }
         return $headers;
+    }
+
+    protected static function signString($key, $msg) {
+        return hash_hmac("sha256", $msg, $key, true);
     }
 }

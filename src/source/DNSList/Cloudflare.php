@@ -6,7 +6,7 @@ use Lit\DevOps\mapper\DnsRecordsMapper;
 use Lit\DevOps\mapper\DnsZoneMapper;
 use Lit\Utils\LiHttp;
 
-class CloudflareDns
+class Cloudflare
 {
     /**
      * @param $email
@@ -66,14 +66,14 @@ class CloudflareDns
             if ($http->getHttpCode() == 200) {
                 $result = json_decode($http->getHttpResult(), true);
                 if (empty($result) || $result['success'] != true) {
-                    throw new \Exception(10001, "获取 cloudflare 域名列表 失败");
+                    throw new \Exception("获取 cloudflare 域名列表 失败", 10001);
                 }
                 $allData = array_merge($allData, $result['result']);
                 if ($result['result_info']['total_pages'] == $page) {
                     break;
                 }
             } else {
-                throw new \Exception(10002, "获取 cloudflare 域名列表 网络错误");
+                throw new \Exception("获取 cloudflare 域名列表 网络错误", 10002);
             }
         }
         $dnsZones = [];

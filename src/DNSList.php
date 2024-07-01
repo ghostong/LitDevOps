@@ -3,8 +3,9 @@
 namespace Lit\DevOps;
 
 use Lit\DevOps\source\DNSList\AwsRoute53;
-use Lit\DevOps\source\DNSList\CloudflareDns;
+use Lit\DevOps\source\DNSList\Cloudflare;
 use Lit\DevOps\source\DNSList\DnsPod;
+use Lit\DevOps\source\DNSList\Godaddy;
 
 class DNSList
 {
@@ -37,8 +38,8 @@ class DNSList
      * @param $authKey
      * @return mapper\DnsZoneMapper[]
      */
-    public static function cloudflareDns($email, $bearerAuth, $authKey) {
-        return CloudflareDns::getList($email, $bearerAuth, $authKey);
+    public static function cloudflare($email, $bearerAuth, $authKey) {
+        return Cloudflare::getList($email, $bearerAuth, $authKey);
     }
 
     public static function aliDns() {
@@ -52,6 +53,14 @@ class DNSList
      */
     public static function dnsPod($secretId, $secretKey) {
         return DnsPod::getList($secretId, $secretKey);
+    }
+
+    /**
+     * 获取必要参数: https://developer.godaddy.com/keys
+     * @return mapper\DnsZoneMapper[]
+     */
+    public static function Godaddy($shopperId, $apiKey, $apiSecret) {
+        return Godaddy::getList($shopperId, $apiKey, $apiSecret);
     }
 
 }
