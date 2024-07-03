@@ -51,8 +51,8 @@ class DNSList
      * @param $secretKey
      * @return mapper\DnsZoneMapper[]
      */
-    public static function dnsPod($secretId, $secretKey) {
-        return DnsPod::getList($secretId, $secretKey);
+    public static function dnsPod($secretId, $secretKey, $onlyZoneName = '') {
+        return DnsPod::getList($secretId, $secretKey, $onlyZoneName);
     }
 
     /**

@@ -18,9 +18,10 @@ $data = [];
 //$data = \Lit\DevOps\DNSList::awsRoute53($accessKeyId, $secretAccessKey, $region);
 
 ### DNSPod
-//$secretId = "aoueoa";
-//$secretKey = "ueoaeu";
-//$data = \Lit\DevOps\DNSList::dnsPod($secretId, $secretKey);
+$secretId = "";
+$secretKey = "";
+$onlyZoneName = "";
+$data = \Lit\DevOps\DNSList::dnsPod($secretId, $secretKey, $onlyZoneName);
 
 ### cloudflare
 //$email = 'a@b.com';

@@ -10,9 +10,12 @@ use Lit\Utils\LiHttp;
 class DnsPod
 {
 
-    public static function getList($secretId, $secretKey) {
+    public static function getList($secretId, $secretKey, $onlyZoneName = '') {
         $dnsZoneMappers = self::getDomainList($secretId, $secretKey);
         foreach ($dnsZoneMappers as $zoneMapper) {
+            if (!empty($onlyZoneName) && $zoneMapper->zone_name != $onlyZoneName) {
+                continue;
+            }
             $zoneMapper->records = self::getDnsRecords($secretId, $secretKey, $zoneMapper->zone_name);
         }
         return $dnsZoneMappers;
@@ -27,6 +30,9 @@ class DnsPod
         $result = self::query($secretId, $secretKey, $action, ['Domain' => $domain, 'Offset' => 0, 'Limit' => 3000]);
         $dnsZones = [];
         foreach ($result['RecordList'] as $record) {
+            if ($record['Status'] != 'ENABLE') {
+                continue;
+            }
             $dnsRecordsMapper = new DnsRecordsMapper();
             $dnsRecordsMapper->zone_name = $domain;
             $dnsRecordsMapper->name = $record['Name'] . '.' . $domain;
