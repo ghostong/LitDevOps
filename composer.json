@@ -20,7 +20,8 @@
     "ext-json": "*",
     "lit/utils": ">=v0.3.1",
     "ext-simplexml": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-openssl": "*"
   },
   "minimum-stability": "dev",
   "autoload": {

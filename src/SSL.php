@@ -3,7 +3,9 @@
 namespace Lit\DevOps;
 
 use Lit\DevOps\mapper\SSLExpireMapper;
+use Lit\DevOps\mapper\SSLParseMapper;
 use Lit\DevOps\source\SslExpire;
+use Lit\DevOps\source\SslParse;
 
 class SSL
 {
@@ -18,5 +20,15 @@ class SSL
         return (new SslExpire())->check($domains);
     }
 
+    /**
+     * 获取证书信息
+     * @date 2025/3/31
+     * @param $pemFile
+     * @return SSLParseMapper
+     * @author litong
+     */
+    public static function parseInfo($pemFile) {
+        return (new SslParse())->parse($pemFile);
+    }
 
 }
